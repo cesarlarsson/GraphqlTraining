@@ -16,6 +16,7 @@ const typeDefs = gql`
 	type User{
 		id: ID!
 		name:String!
+		cars:[Car]
 
 	}
 	type Car{
@@ -23,6 +24,7 @@ const typeDefs = gql`
 		make: String!
 		model: String!
 		color: String!
+		owner: User!
 	}
 `;
 const resolvers = {
@@ -47,6 +49,30 @@ const resolvers = {
 		},
 		me: () => me
 		
+	},
+	User:{
+		cars:(parent)=>{
+			let carList=[];
+			parent.cars.forEach(element => {
+				const car = cars.filter(car =>{ 
+					return car.id === +element
+				});
+				carList.push(car[0]);
+			});
+			console.log(carList);
+			return carList;
+		}
+	},
+	Car:{
+		owner:(parent)=>{
+			console.log(parent.ownerBy);
+			//return users[parent.ownerBy]
+			const user = users.filter(user =>{ 
+				return user.id === +parent.ownerBy
+			});
+			return user[0];
+		}
+
 	}
 };
 

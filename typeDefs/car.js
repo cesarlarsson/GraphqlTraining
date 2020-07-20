@@ -6,7 +6,7 @@ module.exports = gql`
   }
 
   extend type Mutation {
-    createCar(id: Int!,make: String!, model: String!, color: String!): Car!
+    createCar(make: String!, model: String!, color: String!): Car!
     removeCar(id: Int!): Boolean
   }
 

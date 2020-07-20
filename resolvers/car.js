@@ -1,51 +1,39 @@
 const resolvers = {
 	Query:{
 		cars: (parent,args,{models})=>{
-			return models.cars
+			return models.Car.findAll();
 		},
 		car:(parent, {id},{models})=>{	
-			const car = models.cars.filter(car =>{ 
+		/*	const car = models.cars.filter(car =>{ 
 				return car.id === +id
 			});
-			return car[0];
+			return car[0];*/
+			return models.Car.findByPk(id);
 		}
 	},
 
 	Car:{
 		owner:(parent,args,{models})=>{
-			console.log(parent.ownerBy);
-			//return users[parent.ownerBy]
-			const user = models.users.filter(user =>{ 
-				return user.id === +parent.ownerBy
-			});
-			return user[0];
+
+			return models.User.findByPk(parent.userId)
 		}
 
 	},
 	Mutation:{
 
-		createCar(parent,{id,make,model,color}, {models}){
+		createCar(parent,{make,model,color}, {models}){
 			const car ={
-				id,make,model,color
+				make,model,color
 			}
-			models.cars.push(car);
-			return car;
+			return  models.Car.create(car);
 
 		},
 		removeCar: (parent,{id},{models})=>{
-			let found = false;
-			cars = models.cars.filter(car =>{
-				if(car.id === id){
-					found=true;
-				}else{
-					return car
+			models.Car.destroy({
+				where:{
+					id:id
 				}
 			})
-			if(found){
-				return true;
-			}else{
-				return false;
-			}
 		},
 
 	}

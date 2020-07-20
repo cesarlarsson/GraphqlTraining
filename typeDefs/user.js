@@ -6,8 +6,8 @@ module.exports = gql`
     me: User
   }
   extend type Mutation {
-	makeUser(name: String!): User!
-	removeUser(id: Int!): Boolean
+    makeUser(name: String!): User!
+    removeUser(id: Int!): Boolean
   }
   type User {
     id: ID!

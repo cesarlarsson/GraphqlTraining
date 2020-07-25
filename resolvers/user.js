@@ -18,12 +18,7 @@ const resolvers = {
 	Mutation:{
 		//makeUser: (parent,{id, name},{models})=>{
 		makeUser: (parent,{ name},{models})=>{
-			/*const user={
-				id,
-				name
-			}
-			models.users.push(user);
-			return user;*/
+
 			const user={
 
 				name

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express =require('express');
 const app = express();
 const {ApolloServer, gql} = require('apollo-server-express');
@@ -13,6 +14,7 @@ const server = new ApolloServer({
 	resolvers,
 	context:{
 		models,
+		secret: process.env.JWT_SECRET
 		//me
 	}
 })

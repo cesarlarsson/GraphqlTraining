@@ -26,6 +26,10 @@ const user = (sequelize, DataTypes)=>{
 		return await bcrypt.hash(this.password,10);
 	}
 
+User.prototype.validatePassword = async function(password){
+	return await bcrypt.compare(password,this.password);
+}
+
 	User.beforeCreate(async user =>{
 		user.password = await user.hashPassword()
 	

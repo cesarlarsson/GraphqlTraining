@@ -21,9 +21,16 @@ const resolvers = {
 	},
 	Mutation:{
 
-		createCar(parent,{make,model,color}, {models}){
+		createCar(parent,{make,model,color}, {models,me}){
+			if(!me){
+				throw new Error('Not Authenticated');
+			}
+
 			const car ={
-				make,model,color
+				make,
+				model,
+				color,
+				userId: me.id
 			}
 			return  models.Car.create(car);
 

@@ -1,4 +1,13 @@
 const jwt = require('jsonwebtoken');
+const cloudinary = require('cloudinary');
+const {GraphQLScalarType} = require('graphql');
+
+
+cloudinary.config({
+	cloud_name: process.env.cloud_name,
+	api_key: process.env.api_key,
+	api_secret: process.env.api_secret
+});
 
 const createToken = (user,secret,expiresIn)=>{
 	const {id,name,username} = user;
@@ -85,6 +94,29 @@ const resolvers = {
 				token: createToken(user, secret, '30m')
 			}
 			
+		},
+		uploadImage: async (parent,{filename},{models,me})=>{
+			if (!me){
+				throw new Error('not authenticated');
+			}
+			const path = require('path');
+			const mainDir = path.dirname(require.main.filename);
+			filename = `${mainDir}/uploads/${filename}`;
+			try{
+				const photo = await cloudinary.v2.uploader.upload(filename);
+				console.log(photo);
+				await models.User.update({
+					photo: `${photo.public_id}.${photo.format}`
+				},{
+					where: {username:me.username}
+				});
+				return  `${photo.public_id}.${photo.format}`;
+				/*await models.User.update({
+					photo:
+				})*/
+			}catch(error){
+				throw new Error(error);
+			}
 		}
 	},
   User:{
@@ -103,8 +135,41 @@ const resolvers = {
 				userId:parent.id
 			}
 		})
+	},
+	photo: (parent,{options})=>{
+
+
+
+		let url = cloudinary.url(parent.photo);
+		if(options){
+			const [width,q_auto,f_auto, face]= options;
+			const CloudinaryOptions = {
+				...(q_auto === true && {quality: 'auto'}),
+				...(f_auto === 'true' && {feth_format: 'auto'}),
+				...(face && {crop:'thumb',gravity:'face'}),
+				width,
+				secure:true 
+			}
+			url = cloudinary.url(parent.photo,CloudinaryOptions);
+			return url;
+		}
+
+		return url;
 	}
 },
+CloudinaryOptions: new GraphQLScalarType({
+	name: 'CloudinaryOption',
+	parseValue(value){
+		return value;
+	},
+	serialize(value){
+		return value;
+	},
+	parseLiteral(ast){
+		console.log(ast.value);
+		return ast.value.split(',');
+	}
+})
 
 };
 

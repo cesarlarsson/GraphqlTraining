@@ -16,6 +16,9 @@ const user = (sequelize, DataTypes)=>{
 			validate:{
 				notEmpty:true
 			}
+		},
+		photo:{
+			type: DataTypes.STRING
 		}
 	});
 	User.associate= models =>{

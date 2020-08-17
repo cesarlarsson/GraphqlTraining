@@ -28,7 +28,7 @@ const resolvers = {
 			});
 			return user[0];*/
 		},
-	//	me: (parent,args,{me}) => me
+		me: (parent,args,{me}) => me
 		
 	},
 	Mutation:{

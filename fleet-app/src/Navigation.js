@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import LogoutPage from './Logout';
 const  NavigationNoAuth =()=>{
 	return (
 		<ul>
@@ -10,12 +11,23 @@ const  NavigationNoAuth =()=>{
 }
 
 const  NavigationAuth =()=>{
-
+	return (
+		<ul>
+			<li><Link to="/profile">Profile</Link></li>
+			<li><Link to="/logout">Logout</Link></li>
+			<li><LogoutPage></LogoutPage></li>
+		</ul>
+	)
 }
 
-const  Navigation=()=>{
+const  Navigation=({session})=>{
 return (<div>
+	{(session && session.me)?
+	<NavigationAuth></NavigationAuth>
+	:
 	<NavigationNoAuth></NavigationNoAuth>
+	}
+	
 </div>)
 }
 export default Navigation;

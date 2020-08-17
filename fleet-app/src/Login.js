@@ -11,14 +11,14 @@ mutation login($username:String!,$password:String!){
 }`;
 
 
-const LoginPage = ({history})=>{
+const LoginPage = ({history,refetch})=>{
 	return (<div>
 		<h2>Login</h2>
-		<LoginForm history={history}></LoginForm>
+		<LoginForm history={history} refetch={refetch}></LoginForm>
 	</div>)
 }
 
-const LoginForm = ({history})=>{
+const LoginForm = ({history,refetch})=>{
 
 	const [form,setForm] = React.useState({
 		username:'',
@@ -33,9 +33,10 @@ const LoginForm = ({history})=>{
 				username:form.username,
 				password:form.password
 			}
-		}).then(({data})=>{
-			localStorage.setItem('token',data.login.token)
+		}).then(async ({data})=>{
+			await localStorage.setItem('token',data.login.token)
 			console.log(data);
+			await refetch();
 			history.push('/profile')
 		}).catch(error=>{
 			console.error(error);

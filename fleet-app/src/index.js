@@ -7,8 +7,23 @@ import ApolloClient from 'apollo-boost';
 import {ApolloProvider} from 'react-apollo';
 
 const client =new ApolloClient({
-  uri:'http://localhost:3000/graphql'
+  uri:'http://localhost:3000/graphql',
+  request: async operation =>{
+   let token = await localStorage.getItem('token');
+   if(token){
+    operation.setContext({
+      headers:{
+        "x-auth-token":token
+      }
+    })
+   }else{
+    operation.setContext();
+   }
+  } 
 })
+/*const client =new ApolloClient({
+  uri:'http://localhost:3000/graphql'
+})*/
 ReactDOM.render(
   <ApolloProvider client={client}>
     <React.StrictMode>

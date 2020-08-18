@@ -4,6 +4,8 @@ const app = express();
 const {ApolloServer, gql} = require('apollo-server-express');
 let models = require('./models');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
+
 
 const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
@@ -34,5 +36,17 @@ const server = new ApolloServer({
 
 server.applyMiddleware({app});
 app.use(cors());
+app.use(fileUpload());
+
+app.post('/upload',(req,res)=>{
+	let uploadedFile = req.files.file;
+	const filename= req.files.file.name;
+	uploadedFile.mv(`${__dirname}/uploads/${filename}`, error =>{
+		if(error){
+			return res.status(500).send(error);
+		}
+		return res.json(filename);
+	})
+})
 
 app.listen(3000, ()=> console.info('Apollo GraphQL server is running on port 3000'));

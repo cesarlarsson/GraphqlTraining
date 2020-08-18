@@ -10,8 +10,8 @@ cloudinary.config({
 });
 
 const createToken = (user,secret,expiresIn)=>{
-	const {id,name,username} = user;
-	return jwt.sign({id,name,username},secret,{expiresIn});
+	const {id,name,username,photo} = user;
+	return jwt.sign({id,name,username,photo},secret,{expiresIn});
 }
 
 //parent, args, context, info
@@ -90,6 +90,7 @@ const resolvers = {
 			if(!validPassword){
 				throw new Error()
 			}
+			console.log(user)
 			return{
 				token: createToken(user, secret, '30m')
 			}
